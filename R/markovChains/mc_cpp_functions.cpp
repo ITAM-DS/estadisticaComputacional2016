@@ -28,7 +28,7 @@ IntegerVector mc_sim(int init_state, int n_transitions, NumericMatrix trans_mat)
   IntegerVector trajectory(n_transitions + 1); // el estado inicial mas el numero de transicion
   trajectory[0] = init_state;
   for (int i=0; i < n_transitions; i++) {
-    trajectory[i + 1] = markovchain_transition(trajectory[i], trans_mat);
+    trajectory[i + 1] = mc_transition(trajectory[i], trans_mat);
   }
   return trajectory;
 }
