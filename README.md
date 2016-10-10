@@ -69,10 +69,17 @@ Yo recomiendo que en su proyecto tengan la siguiente estructura, de manera que t
 readme.md
 ui.R
 shiny.R // contiene en un showcase con la misma información que app1, app2, etc...
+data/
+|-- example1.Rda
+|-- needed_file.csv
 shinyapps/
-  app1/
-  app2/
-  etc....
+|-- app1/
+|   |-- ui.r
+|   |-- server.r
+|-- app2/
+|   |-- ui.r
+|   |-- server.r
+|-- etc
 </pre>
 La *creatividad* e *iniciativa propia* son elementos importantes de este curso, por lo que los estudiantes que incluyan mejoras no incluidas inicialmente por el profesor serán recompensandos.
 
@@ -82,10 +89,39 @@ La *creatividad* e *iniciativa propia* son elementos importantes de este curso, 
 * **Forma de entrega**: Shiny app
 * **Fecha recomendada de terminación**: durante agosto
 * **Objetivo**: Crear una app simple para familiarizarse con shiny y reforzar el método de la función inversa como una técnica para simular variables aleatorias independientes.
+* * **Output mínimo**
+    + Un véctor numérico de simulaciones de una x ~ Exp(lambda).
+    + Un histograma de x.
+* **Input mínimo**
+    + `nsim`: número de simulaciones
+    + `lambda`: parámetro de la densidad exponencial que se quiere simular
+    + `nbin`: un parámetro para el número de cajones de un histograma de las simulaciones
+* **Instrucciones adicionales**: Se recomienda incluir una prueba de bondad de ajusta para verificar que los números creados tienen la distribución deseada. Pueden incluirse prueba gráficas como densidades empíricas vs densidades teóricas. Puede incluirse un botón para descargar la muestra simulada. Sean creativos.
+
+#### Tarea 2: Integración numérica usando Monte Carlo
+
+* **Forma de entrega**: Shiny app
+* **Fecha recomendada de terminación**: durante septiembre
+* **Objetivo**: Practicar el entendimiento de Monte Carlo como técnica de integración numérica y usar el enfoque de valor esperado para crear intervalos de precisión. Practicar las funciones `eval` y `parse` de R que permite recibir una expresión `s` de R en format de string y ejecutarla con el comando `eval(parse(text = s))`
+* **Output mínimo**
+    + El resultado de calcular int_a^b f(x) dx
+    + Un gráfico que muestre los resultados de la simulación usando `N =10, 100, 1000, 10000, 100000` puntos. En el eje y incluir el resultado de la estimación con `N` puntos y en el eje x poner `log_10(N)` (logaritmo base 10).
+    + El gráfico debe incluir intervalos de confianza al nivel `c %`
+* **Input mínimo**
+    + `a`: límite inferior para la integración
+    + `b`: límite superior para la integración
+    + `fun`: El usario debe introducir en un área de texto la funcíon que debe quiere integrar
+    + `c`: El parámetro para crear intervalso de confianza al `c %`
+* **Instrucciones adicionales**: Para un programa aún mejor, una dificultad es escribir el código de forma que no se rehaga la simulación una vez que se cambia el valor de `c`. Un excelente proyecto incluirá una comparación con un método numérico como el trapecio. Un programa que me deje completamente boquiabierto permitirá integrales múltiples (no es necesario esforzarse tanto).
+
 
 
 ### Ensayo
 <a name="tareas"></a>
 
+Se agregará esta sección más adelante cuando los detalles se discutan en clase.
+
 ### Final
 <a name="tareas"></a>
+
+Se agregará esta sección más adelante cuando los detalles se discutan en clase.
