@@ -16,7 +16,7 @@ Curso para las Maestrías en Ciencias de Datos y Ciencias en Computación. Aquí
 
 
 ### Temario
-<a name="calificacion"></a>
+<a name="temario"></a>
 
 
 
@@ -54,5 +54,5 @@ La *creatividad* e *iniciativa propia* son elementos importantes de este curso, 
 #### Tarea 1: Método de la Función Inversa
 
 * **Forma de entrega**: Shiny app
-* **Fecha recomendada de terminación**: durante Agosto
+* **Fecha recomendada de terminación**: durante agosto
 * **Objetivo**: Crear una app simple para familiarizarse con shiny y reforzar el método de la función inversa como una técnica para simular variables aleatorias independientes.
