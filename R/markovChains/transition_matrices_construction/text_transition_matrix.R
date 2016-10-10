@@ -30,10 +30,16 @@ transition_matrix <-  foreach(i=1:n_words, .combine=rbind) %dopar% {
   freq[is.na(freq)] <- 0
   freq
 }
+transition_matrix[is.na(transition_matrix )] <- 0
 for (i in 1:nrow(transition_matrix)) {
   transition_matrix[i, ] <- transition_matrix[i, ]/sum(transition_matrix[i, ])
 }
 dimnames(transition_matrix) <- list(word_names, word_names)
 stopCluster(cl)
 
-write_csv(as.data.frame(transition_matrix), "data/a_tale_of_two_cities_matrix.csv")
+write.table(
+  transition_matrix, 
+  sep = ",",
+  "data/a_tale_of_two_cities_matrix.csv",
+  row.names = FALSE
+)
