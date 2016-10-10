@@ -7,8 +7,8 @@
 Curso para las Maestrías en Ciencias de Datos y Ciencias en Computación. Aquí encontrarán código y materiales del curso.
 
 ### Contenido
-<a href="#calificacion">Sistema de calificación</a>
-<a href="#tareas">Tareas</a>
+1. <a href="#calificacion">Sistema de calificación</a>
+2. <a href="#tareas">Tareas</a>
 
 
 <a name="calificacion"></a>
@@ -25,11 +25,12 @@ En esta sección encontrarán una descripción de las tareas que deben entregar.
 #### Instrucciones
 Deberán crear un repositorio llamado `compstat2016`. Aquí, deberán tener un proyecto de shiny con archivos `ui.R` y `server.R` que contentan **una** aplicación en la que muestren **todas sus tareas**. Es importante que los arhicos del shiny **no** pueden estar en ninguna subcarpeta. Pueden tener subcarpetas dentro de su repositorio y tener otros archivos o datos ahí, pero el la app de shiny debe estar en la carpeta raíz.
 
-Yo recomiendo que en su proyecto tengan la siguiente estructura
+Yo recomiendo que en su proyecto tengan la siguiente estructura, de manera que trabajen cada app de manera independiente y al final solo incluyan el mismo código en su showcase usando herramientos como `tabBox`, `conditionalPanel`, etc. La utilización de `shinydashboard` es decisión de ustedes.
+
 <pre>
-readme.Rmd
+readme.md
 ui.R
-shiny.R // contiene en un showcase app1, app2, etc...
+shiny.R // contiene en un showcase con la misma información que app1, app2, etc...
 shinyapps/
   app1/
   app2/
@@ -39,6 +40,7 @@ La *creatividad* e *iniciativa propia* son elementos importantes de este curso, 
 
 
 #### Tarea 1: Método de la Función Inversa
-**Forma de entrega**: Shiny app
-**Fecha recomendada de terminación**: durante Agosto
+
+**Forma de entrega**: Shiny app <br/>
+**Fecha recomendada de terminación**: durante Agosto <br/>
 **Objetivo**: Crear una app simple para familiarizarse con shiny y reforzar el método de la función inversa como una técnica para simular variables aleatorias independientes.
