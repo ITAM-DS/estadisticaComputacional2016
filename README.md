@@ -7,19 +7,31 @@
 Curso para las Maestrías en Ciencias de Datos y Ciencias en Computación. Aquí encontrarán código y materiales del curso.
 
 ### Contenido
-1. <a href="#calificacion">Sistema de calificación</a>
-2. <a href="#tareas">Tareas</a>
+1. <a href="#temario">Temario</a>
+2. <a href="#calificacion">Sistema de calificación</a>
+3. <a href="#tareas">Descripción de las tareas</a>
+4. <a href="#tareas">Descripción del ensayo</a>
+5. <a href="#tareas">Descripción del proyecto final</a>
 
 
+
+### Temario
 <a name="calificacion"></a>
 
+
+
 ### Sistema de calificación
+<a name="calificacion"></a>
 
-
-
-<a name="tareas"></a>
+Rubro       |      Peso
+------------|--------------
+Tareas      |       50%
+Ensayo      |       15%
+Proyecto final |    35%
 
 ### Tareas
+<a name="tareas"></a>
+
 En esta sección encontrarán una descripción de las tareas que deben entregar. Habrá varios tipos de tareas; la mayoría de ellas implicarán la creación de una app de shiny. El objetivo es juntar todas las apps en un *shiny* formando un *showcase* de los temas aprendidos en el curso.
 
 #### Instrucciones
@@ -41,6 +53,6 @@ La *creatividad* e *iniciativa propia* son elementos importantes de este curso, 
 
 #### Tarea 1: Método de la Función Inversa
 
-**Forma de entrega**: Shiny app <br/>
-**Fecha recomendada de terminación**: durante Agosto <br/>
-**Objetivo**: Crear una app simple para familiarizarse con shiny y reforzar el método de la función inversa como una técnica para simular variables aleatorias independientes.
+* **Forma de entrega**: Shiny app
+* **Fecha recomendada de terminación**: durante Agosto
+* **Objetivo**: Crear una app simple para familiarizarse con shiny y reforzar el método de la función inversa como una técnica para simular variables aleatorias independientes.
