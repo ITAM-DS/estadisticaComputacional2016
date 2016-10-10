@@ -2,4 +2,3 @@
 .Rhistory
 .RData
 .Ruserdata
-sh-agent -s)eval $(ssh-agent -s)

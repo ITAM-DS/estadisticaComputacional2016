@@ -10,14 +10,40 @@ Curso para las Maestrías en Ciencias de Datos y Ciencias en Computación. Aquí
 1. <a href="#temario">Temario</a>
 2. <a href="#calificacion">Sistema de calificación</a>
 3. <a href="#tareas">Descripción de las tareas</a>
-4. <a href="#tareas">Descripción del ensayo</a>
-5. <a href="#tareas">Descripción del proyecto final</a>
+4. <a href="#ensayo">Descripción del ensayo</a>
+5. <a href="#final">Descripción del proyecto final</a>
 
 
 
 ### Temario
 <a name="temario"></a>
 
+1. Número aleatorios
+    + Números verdaderamente aleatorios y pseudoaleatorios
+    + Calidad de los números pseudoaleatorios
+    + Métodos de generación de números pseudoaleatorios
+    + Ejemplo en clase: código y app para crear número aleatorios usando el generador congruencial lineal
+2. Simulación de variables aleatorias
+    + Simulación de variableas aleatorias discretas
+    + Simulación de variables aleatorias continuas: método de la función inversa, método de aceptación-rechazo y *overview* de otros métodos
+3. Simulación por Monte Carlo
+    + Intuición como método de integración numérica y como método de inferencia estadística no paramétrica
+    + Intervalos de confianza asintóticos para los estimadores de Monte Carlo
+    + *Overview* de métodos de reducción de varianza
+    + Ejemplo en clase: problema del cumpleaños
+4. Introducción a la Teoría de Cadenas de Markov
+    + Procesos estocásticos y la propiedad de Markov
+    + Propiedades elementales
+    + Comportamiento largo plazo. Teorema Ergódico y Teorema Límite de Cadenas de Markov
+    + Aplicaciones: Google PageRank, simulación de texto
+    + Ejemplo en clase: simulación de cadenas de Markov usando C++ con R a través del paquete `Rcpp`
+    + Cadenas reversibles
+    + Extensión a cadenas a conjunto de espacios continuo
+5. Markov Chain Monte Carlo
+    + Aplicación de cadenas reversible al algoritmo de *Metropolis-Hastings*
+    + Ejemplo: Programación del método de *Random-walk Metropolis* en Rcpp
+
+Más temas serán agregados conforme los vayamos cubriendo en el curso.
 
 
 ### Sistema de calificación
@@ -56,3 +82,10 @@ La *creatividad* e *iniciativa propia* son elementos importantes de este curso, 
 * **Forma de entrega**: Shiny app
 * **Fecha recomendada de terminación**: durante agosto
 * **Objetivo**: Crear una app simple para familiarizarse con shiny y reforzar el método de la función inversa como una técnica para simular variables aleatorias independientes.
+
+
+### Ensayo
+<a name="tareas"></a>
+
+### Final
+<a name="tareas"></a>
