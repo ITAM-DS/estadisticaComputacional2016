@@ -1,6 +1,7 @@
 ### Google PageRank
 library(expm)
 library(rARPACK)
+library(readr)
 
 link_count <- read_csv("data/uk_linkcount.csv")
 
@@ -12,7 +13,7 @@ for (i in 1:N) {
 }
 
 # mezclar con matriz de pesos iguales
-alpha <- .9
+alpha <- .85
 trans_mat <- alpha*trans_mat + (1-alpha)*matrix(1/N, ncol = N, nrow = N)
   
   
@@ -37,7 +38,7 @@ head(ptrans[order(ptrans, decreasing = TRUE)], 10)
 
 # estrategia ideal
 vec <- eigs(t(as.matrix(trans_mat)), k = 1)$vectors
-vec <- Re(vec[ ,1]) #Re es porque regresa con complejos
+vec <- vec[ ,1] #Re es porque regresa con complejos
 vec <- vec/sum(vec)
 names(vec) <- names(trans_mat)
 head(vec[order(vec, decreasing = TRUE)],  10)
