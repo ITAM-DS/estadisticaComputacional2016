@@ -88,9 +88,10 @@ shinyapps/
 |-- app2/
 |   |-- ui.r
 |   |-- server.r
-|-- etc
 </pre>
-La *creatividad* e *iniciativa propia* son elementos importantes de este curso, por lo que los estudiantes que incluyan mejoras no incluidas inicialmente por el profesor serán recompensandos.
+Pos supuesto sus apps no tienen que llamarse `app1`, `app2`, ... como en el ejemplo anterior.
+
+Noten que la *creatividad* e *iniciativa propia* son elementos importantes de este curso, por lo que los estudiantes que incluyan mejoras no incluidas inicialmente por el profesor serán recompensandos.
 
 
 #### Tarea 1: Método de la Función Inversa
@@ -139,7 +140,11 @@ En un análisis bayesiano suponemos una distribución inicial para estos paráme
     + Herramientas de diagnóstico numéricas y visuales para evaluar al convergencia del MCMC
     + Un `scatterplot` de `x` con `y` con la linea `hat(y) = a + beta*x` encimada.
     + Tiempo de cómputo.
-* **Instrucciones adicionales**: Su método debe estar programado en `Rcpp`. Si utilizan alguna bibliografía para elejir sus métodos pueden ponerlo en la app. Si quieren sorprender al maestro intenten un método adaptativo de Metropolis-Hasting en vez del método de Random-walk. 
+* **Instrucciones adicionales**: Su método debe estar programado en `Rcpp`. Si utilizan alguna bibliografía para elejir sus métodos pueden ponerlo en la app. Si quieren sorprender al maestro intenten un método adaptativo de Metropolis-Hasting en vez del método de Random-walk.
+
+### Tarea 3b: MCMC, historia y avances
+* Leer el artículo "The MCMC revolution". Hacer una síntesis de una página de los avances que ha habido en el área. 
+
 
 ### Ensayo
 <a name="ensayo"></a>
