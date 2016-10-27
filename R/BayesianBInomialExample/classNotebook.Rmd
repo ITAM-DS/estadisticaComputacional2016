@@ -134,7 +134,7 @@ NumericVector run_mcmc(
   for (int i=0; i < n_sim; i++) {
     do {
       eta = (rnorm(sim[i], jump_size))[0];
-        U = (runif(1))[0]; 
+      U = (runif(1))[0]; 
       if (eta < 0 or eta > 1) {
         test = false; // siempre revisen si estan en el espacio parametral
       } else {

@@ -199,18 +199,64 @@ Probemos la cadena de simulaciones.
 
 ```{r}
 post_sim <- run_mcmc(
-  theta_0 = .5,
-  n_sim = 50,
+  theta_0 = .1,
+  n_sim = 100,
   jump = .05,
   toss = X$toss,
   prior_a = .3,
   prior_b = .3
 )
-post
+head(post_sim)
+```
+
+## Diagnóstico
+
+Vamos a ver que hizo la simulación.
+
+### Exploración del espacio parametral
+```{r}
+plot(post_sim, type ="l", col ="blue")
+abline(h = mean(X$toss), col = "red")
+```
+
+En este ejemplo de juguete (rara vez en la vida real) si podemos graficar la posterior.
+```{r}
+x = seq(0.01,.99,by=.01)
+post_teorica = exp(sapply(x, 
+  logposterior,
+  toss = X$toss, prior_a = .1, prior_b = .1
+))
+plot(x, post_teorica, type="l", col="red")
+hist(post_sim, breaks= 20)
+```
+
+### Burnin
+
+Observemos en el histograma anterior, que hay unos valores que dependen mucho del parámetro inicial. Por eso, siempre en MCMC, "quemamos" las primeras obervaciones. 
+
+En los métodos populares existe la opción del *burnin* que les dice cuánto o que porcentaje van a eliminar de las primeras observaciones. Si repetimos el histograma anterior quemando el primer 15% obtenemos lo siguiente.
+```{r}
+post_sim_burnt <- post_sim[16:100]
+hist(post_sim_burnt)
 ```
 
 
+### Autocorrelación
 
+La autocorrelación es una medida estadística que dice en una serie de tiempo cuanto depende una observación de las anteriores. En algunas ocasiones (raras en mi experiencia) necesitamos tratar a la simulación como observaciones independientes. Para eso se **adelgaza** brincandose ciertas observaciones.
 
+```{r}
+acf(post_sim_burnt)
+```
+Si yo necesitara una muestra de observaciones no correlacionadas de la distribución posterior podría tomar solo una de cada cinco observaciones basado en al gráfica de autocorrelación. En general, demasiada autocorrelación significa que aceptamos demasiado y puede ser peligroso.
+
+## Bueno... ¿y cuál es la probabilidad de la moneda?
+
+Vamos a construir intervalos de probabilidad. En este ejemplo, intervalos de probabilidad del 90%.
+
+```{r}
+quantile(post_sim_burnt, probs = c(.05, .95))
+```
+ Esto les dice que el valor de la moneda está con probabilidad 90% en este intervalo.
 
 
