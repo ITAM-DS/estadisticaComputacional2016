@@ -1,0 +1,172 @@
+---
+title: "Inferencia bayesiana for dummies (en vivo)"
+output: html_notebook
+---
+
+Esta es la versión en vivo del documento
+
+![](./images/cointoss.png)
+
+Estos datos son una muestra de lanzamientos de monedas.
+
+```{r}
+X <- data.frame(
+  toss = c(1,1,1,1,1,1,1,0,0,1,1,1,1,0,1,0,1,1,1,0,1,1,1,1,1,0,1,0,1,0,1,0,1,1,0,1,0,1,0,1,0,1,1,1,0,1,1,1,0,1)
+)
+X
+```
+
+Vamos a hacer un análisis bayesiano para determinar cuál es la probabilidad de que la moneda (el experimento Bernoulli en lenguaje sofisticado) valga 1.
+
+## El modelo
+
+Nosotros sabemos que la moneda toma valor 1 con probabilidad $\Theta$. En otras palabras
+$$
+P(X_i = 1 | \Theta = \theta) = \theta
+$$
+Es decir mi modelo dice que 
+$$
+X_i | \Theta \sim Ber(\Theta)
+$$
+Aquí nuestros datos son $x=(x_1, ..., x_n)=$`toss`.
+
+Si este es el modelo, la verosimilitud es la función
+$$
+likelihood(\theta; X) = f_{X|\Theta}(x|\Theta = \theta) = P(X_1=x_1, ..., X_n = x_n) | \Theta = \theta) = \prod_i P(X_i=x_i|\Theta=\theta)
+$$
+
+Sabemos que 
+$$
+P(X_i=1|\Theta=\theta) = \theta \quad \text{y} \quad P(X_i=0|\Theta=\theta) = 1-\theta
+$$
+$$
+likelihood(\theta; X) = \theta^{\sum x_i}(1-\theta)^{n-\sum x_i}
+$$
+Por razones numéricas que van a quedar claras más adelante, no nos gusta trabajar con la verosimilitud sino con la log-versomilitud, por lo que nos queda
+$$ loglikelihood(\theta;X) = (\sum x_i)log(\theta) + (n - \sum x_i)\log(1-\theta) $$
+
+## Modelar el conocimiento previo
+
+Para modelar conocimiento previo de probabilidades es muy útil usar la distribución Beta que depende de dos parámetros $a$ y $b$.
+ 
+```{r}
+library(ggplot2)
+ggplot(data.frame(theta = c(0,1)), aes(theta)) + 
+  stat_function(
+    fun = dbeta, 
+    args = list(shape1 = 2, shape2 = 2), 
+    aes(colour = "a=2; b=2")
+  ) +
+  stat_function(
+    fun = dbeta, 
+    args = list(shape1 = 5, shape2 = 2), 
+    aes(colour = "a=5; b=2")
+  ) +
+ stat_function(
+    fun = dbeta, 
+    args = list(shape1 = .5, shape2 = .5), 
+    aes(colour = "a=.5; b=.5")
+  ) +
+ylab("density")
+
+```
+
+Acuérdense que lo bonito MCMC es que no me importan las constantes multiplicativas. Es decir, para efectos prácticos mi distribución a priori es
+$$
+prior(\theta) \propto \theta^{a-1}(1-\theta)^{b-1}
+$$
+Igual que con la verosimilitud, se suele usar la *logapriori* 
+$$
+logprior= (a-1)\log(\theta) + (b-1)\log(1-\theta) + K
+$$
+donde la constante $K=-Beta(a,b)$ no importa,y se puede ignorar.
+
+## Distribución posterior usando Bayes
+El teorema de Bayes
+$$
+f_{\Theta|X}(\theta|X=x) \propto f_
+{X|\Theta}(x|\Theta=\theta)f_\Theta(\theta) =
+likelihood*prior
+$$
+
+## Diseño del MCMC
+
+Queremos poder decir algo de la posterior. El problema en la mayoría de los casos (no en este, pero pretendamos que sí...), es que la función resultante es muy fea y requiere calcular integrales muy difíciles o que solo se pueden hacer numéricamente.
+
+El Markov Chain Monte Carlo tiene como propósito simular observaciones de la posterior y las conclusiones que hagamos de esa muestra simulada serán conclusiones de la posterior.
+
+Por lo tanto, la función objetivo $g$ de la cual vamos a simular es
+$$
+g(\theta) = likelihood*prior
+$$
+
+Vamos a usar el algoritmo de *Random Walk Metropolis* que es la forma más sencilla de Metropolis-Hastings. Los paso del algoritmo son:
+
+Supongamos que vamos a simular `n_sim` observaciones y que hemos definido la función objetivo `g`. Para esta versión de Metropolis necesitamos ademas definir un parámetro $\tau$ que es tamaño de brinco. Random Walk consiste en proponer candidatos como una normal centrada en el último valor observado y el tamaño de brinco es la desviación estándar de la normal.
+
+  1. Definir una semmilla $theta_0$ que cumpla $g(theta_0)>0$.
+  2. Para `i=0,1,2,...`
+      + Proponer un candidato $\eta$. En este caso, lo propondremos con la regla de random-walk metropolis 
+      $$\eta \sim N(\theta_i, \tau)$$.
+      + Ahora hay que elegir aceptarlo o no aceptarlo con probabilidad 
+      $$ \min\{1, g(\eta) / g(\theta_i) \} $$
+      Para implementar este paso hay que simular $U\sim unif(0,1)$ y poner $\theta_{i+1} = \eta$ si $U\leq g(\eta)/g(\theta_i)$ y de lo contrario regresar al punto anterior para proponer un nuevo candidato.
+    
+Una nota más... queremos trabajar con logaritmos, entonces la condición para aceptar la vamos a reemplazar por
+$$
+\log(U) \leq \log(g(\eta)) - \log(g(\theta_i)) 
+$$
+donde
+$$
+\log(g(\theta)) = loglikelihood + logprior
+$$
+## Implementación de la simulación
+```{r, engine = 'Rcpp'}
+#include <Rcpp.h>
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+double loglikelihood(double theta, NumericVector toss) {
+  double sumx = sum(toss);
+  int n = toss.size();
+  return sumx*log(theta) + (n-sumx)*log(1-theta);
+}
+
+// [[Rcpp::export]]
+double logprior(double theta, double prior_a, double prior_b) {
+  return (prior_a - 1)*log(theta) + (prior_b - 1)*log(1-theta);
+}
+
+// [[Rcpp::export]]
+double logposterior(
+    double theta, 
+    NumericVector toss, 
+    double prior_a, 
+    double prior_b) {
+  //
+  return loglikelihood(theta, toss) + logprior(theta, prior_a, prior_b);
+}
+```
+Probando al verosimilitud.
+```{r}
+loglikelihood(theta = .7, toss = X$toss)
+loglikelihood(theta = .5, toss = X$toss)
+loglikelihood(theta = .3, toss = X$toss)
+```
+Probando la a priori.
+```{r}
+logprior(theta = .5, prior_a = .1, prior_b = .1)
+logprior(theta = .5, prior_a = 2, prior_b = 2)
+```
+Probando la posterior
+```{r}
+logposterior(theta = .5, toss = X$toss, prior_a = .1, prior_b = .1)
+logposterior(theta = .5, toss = X$toss, prior_a = 2, prior_b = 2)
+```
+
+
+
+
+
+
+

@@ -132,10 +132,9 @@ NumericVector run_mcmc(
   //
   sim[0] = theta_0;
   for (int i=0; i < n_sim; i++) {
-    U = (runif(1))[0]; 
     do {
       eta = (rnorm(sim[i], jump_size))[0];
-      cout << eta << endl;
+        U = (runif(1))[0]; 
       if (eta < 0 or eta > 1) {
         test = false; // siempre revisen si estan en el espacio parametral
       } else {
