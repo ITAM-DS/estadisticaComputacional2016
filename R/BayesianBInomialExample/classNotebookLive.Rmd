@@ -106,7 +106,7 @@ Supongamos que vamos a simular `n_sim` observaciones y que hemos definido la fun
 
   1. Definir una semmilla $theta_0$ que cumpla $g(theta_0)>0$.
   2. Para `i=0,1,2,...`
-      + Proponer un candidato $\eta$. En este caso, lo propondremos con la regla de random-walk metropolis 
+      + Proponer un candidato $\eta$ con $g(\eta)>0$. En este caso, lo propondremos con la regla de random-walk metropolis 
       $$\eta \sim N(\theta_i, \tau)$$.
       + Ahora hay que elegir aceptarlo o no aceptarlo con probabilidad 
       $$ \min\{1, g(\eta) / g(\theta_i) \} $$
@@ -146,6 +146,37 @@ double logposterior(
   //
   return loglikelihood(theta, toss) + logprior(theta, prior_a, prior_b);
 }
+
+// [[Rcpp::export]]
+NumericVector run_mcmc(
+    int n_sim,
+    double theta_0,
+    NumericVector toss,
+    double jump,
+    double prior_a,
+    double prior_b
+) {
+  NumericVector sim(n_sim + 1); // aqui voy a guardar las simulaciones
+  sim[0] = theta_0;
+  double U, eta;
+  bool accepted;
+  for (int i=0; i < n_sim; i++) {
+    // do while hasta que acepte el candidato
+    do {
+      eta = (rnorm(1, sim[i], jump))[0]; // genera el candidato
+      U = (runif(1))[0];
+      if (eta < 0 || eta > 1) {
+        accepted = false;
+      } else {
+        accepted = (log(U) <= logposterior(eta, toss, prior_a, prior_b) -
+                      logposterior(sim[i], toss, prior_a, prior_b));
+      }
+    } while (!accepted);
+    sim[i + 1] = eta;
+  }
+  return sim;
+}
+
 ```
 Probando al verosimilitud.
 ```{r}
@@ -164,6 +195,19 @@ logposterior(theta = .5, toss = X$toss, prior_a = .1, prior_b = .1)
 logposterior(theta = .5, toss = X$toss, prior_a = 2, prior_b = 2)
 ```
 
+Probemos la cadena de simulaciones.
+
+```{r}
+post_sim <- run_mcmc(
+  theta_0 = .5,
+  n_sim = 50,
+  jump = .05,
+  toss = X$toss,
+  prior_a = .3,
+  prior_b = .3
+)
+post
+```
 
 
 
