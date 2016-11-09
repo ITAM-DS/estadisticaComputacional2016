@@ -146,7 +146,7 @@ En un análisis bayesiano suponemos una distribución inicial para estos paráme
 
 En la primera entrega de la app deben:
 
-1. Escoger una base de datos que quieran usar para problemas de regresión. Pueden usar una base de su trabajo o de otro curso. Si no tienen alguna base que les interese, pueden entrar al repositorio de `UCL` para darse algunas ideas. Esta base la usaran para todas las siguientes tareas.
+1. Escoger una base de datos que quieran usar para problemas de regresión. Pueden usar una base de su trabajo o de otro curso. Si no tienen alguna base que les interese, pueden entrar al repositorio de <a href="archive.ics.uci.edu/ml/">UCL</a> para darse algunas ideas. Esta base la usaran para todas las siguientes tareas.
 2. Crear una interface de shiny que utilice las funciones `DT::renderDataTable` y `DT::dataTableOutput` para mostrar su base de datos (vean el tutorial en `http://shiny.rstudio.com/gallery/basic-datatable.html`).
 3. En su interface deben elegir dos variables, la variable independiente `Y` y la variable dependiente `X`. Para esto pueden usar la función `selectInput` de Shiny (en caso de que estén haciendo regresión múltiple, pueden usar `checkboxInput`).
 4. Hagan un *scatterplot/gráfico de dispersión*. Pueden usar `plotly` o `ggplot2`.
