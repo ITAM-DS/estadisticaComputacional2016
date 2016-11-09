@@ -9,7 +9,7 @@ Curso para las Maestrías en Ciencias de Datos y Ciencias en Computación. Aquí
 ### Contenido
 1. <a href="#temario">Temario</a>
 2. <a href="#calificacion">Sistema de calificación</a>
-3. <a href="#tareas">Descripción de las tareas</a
+3. <a href="#tareas">Descripción de las tareas</a>
 5. <a href="#final">Examen final</a>
 
 
@@ -170,7 +170,6 @@ Si quieren usar programación paralela pueden chechar `RcppParallel` o `doParall
 
 ##### Tarea 6: Diagnósticos
 En esta tarea deben mejorar su MCMC.
-
 
 
 ### Fecha de entrega de tareas:
