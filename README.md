@@ -124,7 +124,7 @@ Noten que la *creatividad* e *iniciativa propia* son elementos importantes de es
 
 #### Tarea 4,5 y 6: Haciendo su propio Metropolis-Hastings
 * **Forma de entrega**: Como una pestaña de su shiny app showcase
-* **Fecha recomendada de terminación**:  octubre
+* **Fecha recomendada de terminación**:  octubre (tarea 4) noviembre (tarea 5 y 6)
 * **Objetivo**: Esta tarea estará divida en varias tareas. El objetivo es hacer un análisis *regresión lineal simple bayesiana* usando Markov Chain Monte Carlo. El tipo de regresión es 'simple' porque solo vamos a usar una variable explicativa, pero si ustedes desean, pueden hacer todo para regresión múltiple.
 El objetivo es *predecir* una variable *Y* usando otra variable aleatoria *X*. El *modelo* está dado por
 <div align="center"><pre>
