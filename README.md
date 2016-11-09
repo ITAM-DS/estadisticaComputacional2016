@@ -145,6 +145,7 @@ En un análisis bayesiano suponemos una distribución inicial para estos paráme
 ##### Tarea 4: Diseño de interface y set up inicial
 
 En la primera entrega de la app deben:
+
 1. Escoger una base de datos que quieran usar para problemas de regresión. Pueden usar una base de su trabajo o de otro curso. Si no tienen alguna base que les interese, pueden entrar al repositorio de `UCL` para darse algunas ideas. Esta base la usaran para todas las siguientes tareas.
 2. Crear una interface de shiny que utilice las funciones `DT::renderDataTable` y `DT::dataTableOutput` para mostrar su base de datos (vean el tutorial en `http://shiny.rstudio.com/gallery/basic-datatable.html`).
 3. En su interface deben elegir dos variables, la variable independiente `Y` y la variable dependiente `X`. Para esto pueden usar la función `selectInput` de Shiny (en caso de que estén haciendo regresión múltiple, pueden usar `checkboxInput`).
@@ -157,10 +158,12 @@ En la primera entrega de la app deben:
 En esta fase de la tarea deben hacer el MCMC. Deben programar una serie de funciones usando el paquete `Rcpp` (go ahead si quieren hacerlo en C/C++ puro... it's up to you.. I would not): la verosimilitud, su a priori, su a posteriori o función objetivo para simular y el MCMC. La función debe regresar la simulación.
 
 El shiny debe recibir como parámetros (inputs de shiny, vean funciones como `slideInput` y `numericInput`)
+
 1. El número de cadenas que se quieren simular
 2. La longitud de las cadenas
 
 El output debe ser:
+
 1. Las simulación de las cadenas. Una matriz numérica de número de filas el número objetivo de simulaciones y de número de columnas el número de cadenas que pidieron simular.
 2. Deben hacer histogramas de las simulaciones de cada parámetro de su modelo.
 3. En una gráfica deben comparar la densidad a priori que dieron con la posterior. Para esto, deben estimar la densidad posterior usando la función `density` de R. Aquí hay un ejemplo de como pueden graficar una densidad <a href="http://www.statmethods.net/graphs/density.html">click here</a>. Pero ustedes deben poner la a apriori y la posterior en la misma gráfica. Puede ser bastante laborioso atinarle a los límites de graficación; plotly o ggplot lo hacen por ustedes. Pueden hacer la paquetería de graficación que gusten. Sean creativos; ¡disfrútenlo!
