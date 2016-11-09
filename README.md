@@ -120,6 +120,7 @@ Noten que la *creatividad* e *iniciativa propia* son elementos importantes de es
 #### Tarea 3: MCMC, historia y avances
 * **Forma de entrega**: Documento físico
 * **Instrucciones**: Leer el artículo "The MCMC revolution" y hacer una síntesis de la lectura y su opinión sobre ella en máximo una cuartilla.
+* **Fecha de entrega** 16 de noviembre en clase
 
 
 #### Tarea 4,5 y 6: Haciendo su propio Metropolis-Hastings
