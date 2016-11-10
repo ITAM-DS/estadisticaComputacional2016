@@ -206,7 +206,7 @@ post_sample <- run_mcmc(
   prior_a = .3,
   prior_b = .3
 )
-head(post_sim)
+head(post_sample)
 ```
 
 ## Diagnóstico
