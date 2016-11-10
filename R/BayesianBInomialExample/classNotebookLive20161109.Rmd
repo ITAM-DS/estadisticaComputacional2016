@@ -198,13 +198,18 @@ logposterior(theta = .5, toss = X$toss, prior_a = 2, prior_b = 2)
 Probemos la cadena de simulaciones.
 
 ```{r}
+theta_0 <- .1
+n_sim <- 300
+jump <- .05
+prior_a <- .3
+prior_b <- .3
 post_sample <- run_mcmc(
-  theta_0 = .1,
-  n_sim = 100,
-  jump = .05,
+  theta_0 = theta_0,
+  n_sim = n_sim,
+  jump = jump,
   toss = X$toss,
-  prior_a = .3,
-  prior_b = .3
+  prior_a = prior_a,
+  prior_b = prior_b
 )
 head(post_sample)
 ```
