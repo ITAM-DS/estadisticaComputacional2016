@@ -133,7 +133,7 @@ El objetivo es *predecir* una variable *Y* usando otra variable aleatoria *X*. E
 </pre></div>
 Los parámetros desconocidos del modelo son theta=(`a`, `beta` y `sigma^2`). Los datos son `(X,Y)`. Si se fijan, en realidad la distribución está asumiendo sore los errores, así que en realidad el modelo está en función de los errores. Por lo tanto, la función de verosimilitud también queda en término de los errores. La función de verosimilitud del modelo es
 <pre>
-  L(theta) = f(e | X,Y) =
+  L(theta) = f(e | theta) =
                = sqrt(2 pi sigma^ 2)^(-N/2)  exp(-e^te/(2 sigma^2))
                = sqrt(2 pi sigma^ 2)^(-N/2)  exp((Y-Xb-a)^t(Y-Xb-a)/(2 sigma^2))
 </pre>
