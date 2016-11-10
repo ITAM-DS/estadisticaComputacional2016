@@ -133,7 +133,7 @@ El objetivo es *predecir* una variable *Y* usando otra variable aleatoria *X*. E
 </pre></div>
 Los parámetros desconocidos del modelo son theta=(`a`, `beta` y `sigma^2`). Los datos son `(X,Y)`. Si se fijan, en realidad la distribución está asumiendo sore los errores, así que en realidad el modelo está en función de los errores. Por lo tanto, la función de verosimilitud también queda en término de los errores. La función de verosimilitud del modelo es
 <pre>
-  L(theta) = f(e | theta) =
+  L(theta) = f(e | X,Y) =
                = sqrt(2 pi sigma^ 2)^(-N/2)  exp(-e^te/(2 sigma^2))
                = sqrt(2 pi sigma^ 2)^(-N/2)  exp((Y-Xb-a)^t(Y-Xb-a)/(2 sigma^2))
 </pre>
@@ -168,7 +168,10 @@ El output debe ser:
 2. Deben hacer histogramas de las simulaciones de cada parámetro de su modelo.
 3. En una gráfica deben comparar la densidad a priori que dieron con la posterior. Para esto, deben estimar la densidad posterior usando la función `density` de R. Aquí hay un ejemplo de como pueden graficar una densidad <a href="http://www.statmethods.net/graphs/density.html">click here</a>. Pero ustedes deben poner la a apriori y la posterior en la misma gráfica. Puede ser bastante laborioso atinarle a los límites de graficación; plotly o ggplot lo hacen por ustedes. Pueden hacer la paquetería de graficación que gusten. Sean creativos; ¡disfrútenlo!
 
-*Una cosa más (por si creían que sería fácil...) Su cadena sólo debe calcularse cuándo precionen un boton*. Para incluir botones hay que usar las funciones `actionButton` y `observeEvent` o `eventReactive` de shiny. Pueden ver ejemplos en <a href="http://shiny.rstudio.com/articles/action-buttons.html">click here</a>.
+*¡El reto más grande que van a tener es elegir el parámetro de brinco!* Es difícil, discútanlo conmigo para ver una solución. Una propuesta muy muy sencilla la pueden encontrar en la página 3 de <a href="http://probability.ca/jeff/ftpdir/adaptex.pdf">clink here</a>. Está basado en la estimación de la matriz de covarianza. Vamos a ver en clase cómo aplicarlo.
+
+
+*Recomendación* (solo enfóquense en esto si ya tienen lo demás) Su cadena sólo debe calcularse cuándo precionen un boton*. Para incluir botones hay que usar las funciones `actionButton` y `observeEvent` o `eventReactive` de shiny. Pueden ver ejemplos en <a href="http://shiny.rstudio.com/articles/action-buttons.html">click here</a>.
 
 Si quieren usar programación paralela pueden chechar `RcppParallel` o `doParallel`, en este caso lo dejaremos como optativo.
 
