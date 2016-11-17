@@ -1,0 +1,249 @@
+---
+title: "Pre classs notes"
+output:
+  html_notebook: default
+  html_document: default
+---
+
+
+```{r, engine='Rcpp'}
+#include <Rcpp.h>
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+double loglikelihood(double theta, NumericVector toss) {
+  double sumx = sum(toss);
+  int n = toss.size();
+  return sumx*log(theta) + (n-sumx)*log(1-theta);
+}
+
+// [[Rcpp::export]]
+double logprior(double theta, double prior_a, double prior_b) {
+  return (prior_a - 1)*log(theta) + (prior_b - 1)*log(1-theta);
+}
+
+// [[Rcpp::export]]
+double logposterior(
+    double theta, 
+    NumericVector toss, 
+    double prior_a, 
+    double prior_b) {
+  //
+  return loglikelihood(theta, toss) + logprior(theta, prior_a, prior_b);
+}
+
+// [[Rcpp::export]]
+List run_mcmc_v2(
+    int n_sim,
+    double theta_0,
+    NumericVector toss,
+    double jump,
+    double prior_a,
+    double prior_b
+) {
+  NumericVector sim(n_sim + 1); // aqui voy a guardar las simulaciones
+  sim[0] = theta_0;
+  double U, eta;
+  bool accepted;
+  NumericVector acceptance_rate(n_sim + 1);
+  acceptance_rate[0] = 1;
+  int attempts = 0;
+  for (int i=0; i < n_sim; i++) {
+    // do while hasta que acepte el candidato
+    do {
+      eta = (rnorm(1, sim[i], jump))[0]; // genera el candidato
+      U = (runif(1))[0];
+      accepted = (log(U) <= logposterior(eta, toss, prior_a, prior_b) -
+                    logposterior(sim[i], toss, prior_a, prior_b));
+      attempts++;
+    } while (!accepted);
+    acceptance_rate[i + 1] = (double) i / attempts;
+    sim[i + 1] = eta;
+  }
+  // dos clases nuevas: List y Named para crear listas con nombres.
+  return List::create(Named("chain") = sim, Named("acceptance_rate") = acceptance_rate);
+}
+```
+
+Testing
+
+```{r}
+sim <- run_mcmc_v2(
+  n_sim = 100,
+  theta_0 = .1,
+  toss = c(1,0,1,0,0,0,0,1,1,1,1,1,0,0,0,0,1,1,1,0,0,0,1,1,1,1,0),
+  jump = .1,
+  prior_a = 1,
+  prior_b = 1
+)
+par(mfrow=c(1,2))
+plot(sim$chain, type = "l")
+plot(sim$acceptance_rate, type = "l", ylim = c(0,1))
+```
+
+ Now compare what happens with different jump sizes
+
+```{r, fig.width=11, fig.height = 4}
+jump_size = c(.0001, .001, .01, .1, 1, 10)
+for (i in 1:6){
+  sim <- run_mcmc_v2(
+    n_sim = 1000,
+    theta_0 = .1,
+    toss = c(1,0,1,0,0,0,0,1,1,1,1,1,0,0,0,0,1,1,1,0,0,0,1,1,1,1,0),
+    jump = jump_size[i],
+    prior_a = 1,
+    prior_b = 1
+  )
+  par(mfrow=c(1,3))
+  plot(sim$chain, type = "l", col = "blue", ylim = c(0,1))
+  plot(sim$acceptance_rate, type = "l", ylim = c(0,1), col = "red")
+  acf(sim$chain)
+}
+```
+
+
+Un médoto adaptativo. 
+
+Vamos a comenzar con un tamaño de brinco dado por el usuario (lo usual es comenzar con un brinco de 0.1) y vamos a adaptar el tamaño de brinco después de $T$ observaciones.
+
+$$
+\text{jump} = 2.38\hat{\sigma}
+$$
+
+donde $\hat{\sigma}$ es la  varianza de la cadena hasta el momento. Esta es una simplificación del método de Haario et al (2001) pero debe ser suficiente para efectos de este tutorial. Aquí una implementación simple
+
+```{r, engine='Rcpp'}
+#include <Rcpp.h>
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+double loglikelihood(double theta, NumericVector toss) {
+  double sumx = sum(toss);
+  int n = toss.size();
+  return sumx*log(theta) + (n-sumx)*log(1-theta);
+}
+
+// [[Rcpp::export]]
+double logprior(double theta, double prior_a, double prior_b) {
+  return (prior_a - 1)*log(theta) + (prior_b - 1)*log(1-theta);
+}
+
+// [[Rcpp::export]]
+double logposterior(
+    double theta, 
+    NumericVector toss, 
+    double prior_a, 
+    double prior_b) {
+  //
+  return loglikelihood(theta, toss) + logprior(theta, prior_a, prior_b);
+}
+
+// [[Rcpp::export]]
+List run_adaptive_mcmc(
+    int n_sim,
+    double theta_0,
+    NumericVector toss,
+    double prior_a,
+    double prior_b,
+    double initial_jump = 1,
+    int adaptation_interval = 10
+) {
+  NumericVector sim(n_sim + 1); // aqui voy a guardar las simulaciones
+  sim[0] = theta_0;
+  double U, eta;
+  bool accepted;
+  NumericVector acceptance_rate(n_sim + 1);
+  acceptance_rate[0] = 1;
+  int attempts = 0;
+  double jump = initial_jump;
+  for (int i=0; i < adaptation_interval; i++) {
+    // do while hasta que acepte el candidato
+    do {
+      eta = (rnorm(1, sim[i], jump))[0]; // genera el candidato
+      U = (runif(1))[0];
+      accepted = (log(U) <= logposterior(eta, toss, prior_a, prior_b) -
+                    logposterior(sim[i], toss, prior_a, prior_b));
+      attempts++;
+    } while (!accepted);
+    acceptance_rate[i + 1] = (double) i / attempts;
+    sim[i + 1] = eta;
+  }
+  jump = 2.38*sd(sim[Range(0, adaptation_interval)]);
+  for (int i = adaptation_interval; i < n_sim; i++) {
+    // do while hasta que acepte el candidato
+    do {
+      eta = (rnorm(1, sim[i], jump))[0]; // genera el candidato
+      U = (runif(1))[0];
+      accepted = (log(U) <= logposterior(eta, toss, prior_a, prior_b) -
+                    logposterior(sim[i], toss, prior_a, prior_b));
+      attempts++;
+    } while (!accepted);
+    acceptance_rate[i + 1] = (double) i / attempts;
+    sim[i + 1] = eta;
+  }
+  // dos clases nuevas: List y Named para crear listas con nombres.
+  return List::create(
+    Named("chain") = sim, 
+    Named("acceptance_rate") = acceptance_rate,
+    Named("jump_size") = jump);
+}
+```
+
+Ahora varios brincos iniciales 
+
+```{r}
+initial_jump_size = c(.0001, .001, .01, .1, 1, 10)
+for (i in 1:6){
+  sim <- run_adaptive_mcmc(
+    n_sim = 1000,
+    theta_0 = .1,
+    toss = c(1,0,1,0,0,0,0,1,1,1,1,1,0,0,0,0,1,1,1,0,0,0,1,1,1,1,0),
+    initial_jump = initial_jump_size[i],
+    adaptation_interval = 100,
+    prior_a = 1,
+    prior_b = 1
+  )
+  par(mfrow=c(1,3))
+  print(paste("Valor final de brinco:", sim$jump_size, ",   Valor inicial de brinco: ", initial_jump_size[i]))
+  plot(sim$chain, type = "l", col = "blue", ylim = c(0,1))
+  plot(sim$acceptance_rate, type = "l", ylim = c(0,1), col = "red")
+  acf(sim$chain)
+}
+```
+
+# 1 Problemas multivariados
+
+Vamos a dar algunos hints para adaptar esto a problemas multivariados. El problema principal es trabajar con normales multivariadas. Para poder hacer Metropolis necesitamos saber generar normales multivariadas a partir de un vector de medias y una matriz de densidad. Esto va a requerir Álgebra Lineal y una extensión de  `Rcpp`  llamada `RcppArmadillo` orientada a Álgebra Lineal. Este es un buen momento que busquen información sobre `LACPACK`.
+
+```{r}
+library(mvnfast)
+```
+Vamos a necesitar las siguientes herramientas
+
+1. Función de covarianza, podemos llamar la función de covarianza de R.
+
+```{r, engine= 'Rcpp'}
+#include <RcppArmadillo.h>
+// [[Rcpp::depends(RcppArmadillo)]]
+using namespace Rcpp;
+
+// [[Rcpp::export]]
+NumericMatrix mvrnorm(int n, NumericVector mu, NumericMatrix sigma) {
+   int ncols = sigma.ncol();
+   arma::mat Y = arma::randn(n, ncols);
+   return wrap(arma::repmat(as<arma::vec>(mu), 1, n).t() + Y * arma::chol(as<arma::mat>(sigma)));
+}
+
+// [[Rcpp::export]]
+NumericMatrix cov_cpp(NumericMatrix X) {
+  return wrap(arma::cov(as<arma::mat>(X)));
+}
+```
+
+```{r}
+sample <- mvrnorm(1000, c(1,2), matrix(c(.5, -.3, -.3, .5), nrow = 2, ncol = 2))
+head(sample)
+cov(sample)
+cov_cpp(sample)
+```
+ 
